@@ -4,28 +4,30 @@ The class 'State'
 """
 
 
-from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy import Column, String
+#!/usr/bin/python3
+"""Defines the State class."""
+import models
 from os import getenv
+from models.base_model import Base
+from models.base_model import BaseModel
+from models.city import City
+from sqlalchemy import Column
+from sqlalchemy import String
+from sqlalchemy.orm import relationship
 
 
 class State(BaseModel, Base):
-    """State Class"""
+    """Rep state"""
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship(
-        "City",
-        cascade="all,delete,delete-orphan",
-        backref=backref("state", cascade="all,delete"),
-        passive_deletes=True,
-        single_parent=True)
+    cities = relationship("City",  backref="state", cascade="delete")
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
-            """returning list of City using state_id"""
-            from models import storage
-            from models import City
-            return [v for k, v in storage.all(City).items()
-                    if v.state_id == self.id]
+            """Get obj list"""
+            city_list = []
+            for city in list(models.storage.all(City).values()):
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
