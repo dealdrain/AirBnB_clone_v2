@@ -20,8 +20,7 @@ class FileStorage:
     __objects = {}
 
     def delete(self, obj=None):
-        """delete
-        """
+        """delete"""
         if not obj:
             return
         key = "{}.{}".format(type(obj).__name__, obj.id)
@@ -36,8 +35,7 @@ class FileStorage:
         return {k: v for k, v in self.__objects.items() if type(v) == cls}
 
     def new(self, obj):
-        """sets __object
-        """
+        """sets __object"""
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             self.__objects[key] = obj
